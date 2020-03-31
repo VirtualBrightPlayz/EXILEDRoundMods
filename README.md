@@ -29,6 +29,28 @@ Type: int
 
 Default: 1
 
+## RA Commands
+
+### rm_mod
+
+Displays some info about the plugin, as well as the allowed mods.
+
+### rm_mod_`MODTYPE`
+
+Toggles the mod of `MODTYPE` to on or off.
+
+### rm_mod`MODTYPE` [true|false]
+
+Sets the mod of `MODTYPE` to be on or off.
+
+### rm_set_mod
+
+Displays all current mods, by codename.
+
+### rm_set_mod [modtypes, as, a, list]
+
+Sets the current mods to the list of mods. Separate the types by `,`.
+
 ## Example Config
 
 ```yaml
