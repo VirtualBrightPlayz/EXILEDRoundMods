@@ -9,6 +9,40 @@ Current Mods are displayed on the player's screen when they join. If you are usi
 
 ## Config
 
+The `.` is just a subcategory in the config. See example for more.
+
+### rm_rng.weapons
+
+Description: The items (by number) that are seen to the plugin as weapons.
+
+Type: List
+
+Default: 13, 20, 24, 23, 21, 30, 16, 26, 25
+
+### rm_rng.meds
+
+Description: The items (by number) that are seen to the plugin as medical items.
+
+Type: List
+
+Default: 33, 14, 34
+
+### rm_rng.samescps
+
+Description: The classes (by number) used for the mod SINGLESCPTYPE (yes, you can use non-SCP classes, but I wouldn't do it).
+
+Type: List
+
+Default: 5, 9, 3, 0, 16, 17
+
+### rm_rng.bossscps
+
+Description: The classes (by number) used for the mod SCPBOSS (yes, you can use non-SCP classes, but I wouldn't do it).
+
+Type: List
+
+Default: 9, 3, 0, 16, 17
+
 ### rm_max_mods
 
 Description: The maximum amount of mods used at a time. Can be overridden via RA commands.
