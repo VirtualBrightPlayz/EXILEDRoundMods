@@ -5,6 +5,8 @@ To display the current mods on the server list, add `{rm_current_mods}` to the n
 
 For RA Commands, there is one permission: `roundmod.setmod`.
 
+Current Mods are displayed on the player's screen when they join. If you are using a plugin to show some kind of Server Title when you join, do it the second the player joins, this plugin will wait ~0.1 seconds before broadcasting to the new player.
+
 ## Config
 
 ### rm_max_mods
