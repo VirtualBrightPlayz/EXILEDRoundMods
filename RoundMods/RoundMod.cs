@@ -206,7 +206,7 @@ namespace RoundMods
     {
         public static bool Prefix(NineTailedFoxAnnouncer __instance, Role scp, PlayerStats.HitInfo hit, string groupId)
         {
-            if (RoundMod.instance.curMod.HasFlag(ModType.CLASSINFECT) && RoundMod.instance.allowedTypes.Contains(ModType.CLASSINFECT))
+            if (RoundMod.instance.curMod.HasFlag(ModType.CLASSINFECT) && RoundMod.instance.enabledTypes.Contains(ModType.CLASSINFECT))
             {
                 if (PlayerManager.players.FindAll((g) =>
                 {
@@ -219,7 +219,7 @@ namespace RoundMods
                 }
                 return false;
             }
-            /*if (RoundMod.instance.curMod.HasFlag(ModType.SINGLESCPTYPE) && RoundMod.instance.allowedTypes.Contains(ModType.SINGLESCPTYPE))
+            /*if (RoundMod.instance.curMod.HasFlag(ModType.SINGLESCPTYPE) && RoundMod.instance.enabledTypes.Contains(ModType.SINGLESCPTYPE))
             {
                 if (PlayerManager.players.FindAll((g) =>
                 {
@@ -692,7 +692,7 @@ namespace RoundMods
         {
             yield return Timing.WaitForSeconds(0.1f);
             player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, "Current Round Modifier(s):", 5, false);
-            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.allowedTypes.Contains(ModType.NONE))
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
             {
                 player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[ModType.NONE], 5, false);
             }
