@@ -92,6 +92,36 @@ Sets the current mods to the list of mods. Separate the types by `,`.
 ## Example Config
 
 ```yaml
+
+rm_rng:
+  weapons:
+  - 13
+  - 20
+  - 24
+  - 23
+  - 21
+  - 30
+  - 16
+  - 26
+  - 25
+  meds:
+    - 33
+    - 14
+    - 34
+  bossscps:
+    - 9
+    - 3
+    - 0
+    - 16
+    - 17
+  samescps:
+    - 5
+    - 9
+    - 3
+    - 0
+    - 16
+    - 17
+
 rm_max_mods: 10
 
 rm_allow_NONE: true
