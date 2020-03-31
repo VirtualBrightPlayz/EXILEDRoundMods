@@ -89,4 +89,5 @@ rm_chance_NORESPAWN: 1
 rm_chance_EXPLODEONDEATH: 2
 rm_chance_FINDWEAPONS: 3
 rm_chance_ITEMRANDOMIZER: 1
-rm_chance_CLASSINFECT: 1```
+rm_chance_CLASSINFECT: 1
+```
