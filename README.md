@@ -1,7 +1,9 @@
 # EXILEDRoundMods
-A EXILED plugin that changes game mechanics without creating entirely new gamemodes
+A EXILED plugin that changes game mechanics without creating entirely new gamemodes.
 
 To display the current mods on the server list, add `{rm_current_mods}` to the name of your server.
+
+For RA Commands, there is one permission: `roundmod.setmod`.
 
 ## Config
 
