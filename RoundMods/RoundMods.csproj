@@ -73,6 +73,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CassieFix.cs" />
+    <Compile Include="ConfigExtentions.cs" />
+    <Compile Include="CustomEnums.cs" />
+    <Compile Include="ExtensionsGalaxy119.cs" />
+    <Compile Include="PluginEvents.cs" />
     <Compile Include="RoundMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
