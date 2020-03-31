@@ -74,7 +74,7 @@ namespace RoundMods
 
         public override void OnReload()
         {
-            ConfigLoad();
+            //ConfigLoad();
         }
 
         public void ConfigLoad()
