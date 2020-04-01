@@ -426,6 +426,10 @@ namespace RoundMods
             respawning = true;
             Timing.RunCoroutine(ResetSize(ev.ToRespawn));
             Timing.RunCoroutine(SetRespawnStop());
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+            {
+                return; // cuz none means none
+            }
             if (plugin.curMod.HasFlag(ModType.NORESPAWN) && plugin.enabledTypes.Contains(ModType.NORESPAWN))
             {
                 ev.ToRespawn.Clear();
@@ -475,6 +479,10 @@ namespace RoundMods
 
         internal void PlayerEscape(ref CheckEscapeEvent ev)
         {
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+            {
+                return; // cuz none means none
+            }
             if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
             {
                 Timing.RunCoroutine(ChangeSizeLate(ev.Player));
@@ -483,6 +491,10 @@ namespace RoundMods
 
         internal void PlayerDeath(ref PlayerDeathEvent ev)
         {
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+            {
+                return; // cuz none means none
+            }
             if (plugin.curMod.HasFlag(ModType.EXPLODEONDEATH) && plugin.enabledTypes.Contains(ModType.EXPLODEONDEATH))
             {
                 if (ev.Killer == null || (ev.Killer != null && ev.Killer.GetTeam() != Team.SCP && ev.Killer.GetTeam() != Team.TUT))
@@ -496,9 +508,8 @@ namespace RoundMods
                         Grenade comp = UnityEngine.Object.Instantiate(set.grenadeInstance).GetComponent<Grenade>();
                         comp.fuseDuration = 0.1f;
                         comp.InitData(gm, Vector3.zero, Vector3.zero, 10f);
+                        // commented for stable release
                         //deathGrenades.Add(comp);
-                        //comp.throwerTeam = Team.RIP;
-                        //comp.fuseTime = 0f;
                         NetworkServer.Spawn(comp.gameObject);
                     }
                 }
@@ -528,6 +539,10 @@ namespace RoundMods
 
         internal void PDDie(PocketDimDeathEvent ev)
         {
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+            {
+                return; // cuz none means none
+            }
             if (plugin.curMod.HasFlag(ModType.CLASSINFECT) && plugin.enabledTypes.Contains(ModType.CLASSINFECT))
             {
                 Timing.RunCoroutine(InfectLate(ev.Player, RoleType.Scp106, Map.GetRandomSpawnPoint(RoleType.Scp106)));

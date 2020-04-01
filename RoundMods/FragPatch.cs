@@ -19,7 +19,7 @@ namespace RoundMods
 
         public static IEnumerable<CodeInstruction> Transpiler(FragGrenade __instance, IEnumerable<CodeInstruction> instructions)
         {
-            if (PluginEvents.deathGrenades.Contains(__instance))
+            if (!PluginEvents.deathGrenades.Contains(__instance))
             {
                 foreach (var item in instructions)
                 {
@@ -27,6 +27,7 @@ namespace RoundMods
                 }
                 yield break;
             }
+            PluginEvents.deathGrenades.Remove(__instance);
             var found = false;
             List<CodeInstruction> list = new List<CodeInstruction>();
             for (int i = 0; i < instructions.ToArray().Length; i++)
