@@ -43,6 +43,14 @@ Type: List
 
 Default: 9, 3, 0, 16, 17
 
+### rm_rng.noinfect
+
+Description: The classes (by number) NOT used for the mod CLASSINFECT.
+
+Type: List
+
+Default: 7
+
 ### rm_max_mods
 
 Description: The maximum amount of mods used at a time. Can be overridden via RA commands.
