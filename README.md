@@ -3,7 +3,9 @@ A EXILED plugin that changes game mechanics without creating entirely new gamemo
 
 To display the current mods on the server list, add `{rm_current_mods}` to the name of your server.
 
-For RA Commands, there is one permission: `roundmod.setmod`.
+For RA Commands, there is two permissions: `roundmod.setmod` and `roundmod.reload`.
+
+Use `RM_RELOAD` to reload the plugin's config.
 
 Current Mods are displayed on the player's screen when they join. If you are using a plugin to show some kind of Server Title when you join, do it the second the player joins, this plugin will wait ~0.1 seconds before broadcasting to the new player.
 
@@ -42,6 +44,14 @@ Description: The classes (by number) used for the mod SCPBOSS (yes, you can use 
 Type: List
 
 Default: 9, 3, 0, 16, 17
+
+### rm_rng.noinfect
+
+Description: The classes (by number) NOT used for the mod CLASSINFECT.
+
+Type: List
+
+Default: 7
 
 ### rm_max_mods
 
