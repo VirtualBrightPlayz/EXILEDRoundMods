@@ -496,6 +496,7 @@ namespace RoundMods
                         Grenade comp = UnityEngine.Object.Instantiate(set.grenadeInstance).GetComponent<Grenade>();
                         comp.fuseDuration = 0.1f;
                         comp.InitData(gm, Vector3.zero, Vector3.zero, 10f);
+                        //deathGrenades.Add(comp);
                         //comp.throwerTeam = Team.RIP;
                         //comp.fuseTime = 0f;
                         NetworkServer.Spawn(comp.gameObject);
@@ -540,7 +541,11 @@ namespace RoundMods
             ReferenceHub player = ev.Sender.SenderId == "SERVER CONSOLE" || ev.Sender.SenderId == "GAME CONSOLE" ? PlayerManager.localPlayer.GetPlayer() : Player.GetPlayer(ev.Sender.SenderId);
             if (player.CheckPermission("roundmod.reload"))
             {
-                plugin.ConfigLoad();
+                if (args[0].ToUpper().Equals("RM_RELOAD"))
+                {
+                    plugin.ConfigLoad();
+                    ev.Sender.RAMessage("RoundMod config reloaded!", pluginName: plugin.getName);
+                }
             }
             if (player.CheckPermission("roundmod.setmod"))
                 {

@@ -17,9 +17,16 @@ namespace RoundMods
     {
         public static MethodInfo getShootPerms = typeof(WeaponManager).GetMethod(nameof(WeaponManager.GetShootPermission), BindingFlags.Public | BindingFlags.Instance);
 
-        public static IEnumerable<CodeInstruction> Transpiler(NineTailedFoxAnnouncer __instance, IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(FragGrenade __instance, IEnumerable<CodeInstruction> instructions)
         {
-            if (PluginEvents.deathGrenades(__instance))
+            if (PluginEvents.deathGrenades.Contains(__instance))
+            {
+                foreach (var item in instructions)
+                {
+                    yield return item;
+                }
+                yield break;
+            }
             var found = false;
             List<CodeInstruction> list = new List<CodeInstruction>();
             for (int i = 0; i < instructions.ToArray().Length; i++)
