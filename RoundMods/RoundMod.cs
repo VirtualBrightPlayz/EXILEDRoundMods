@@ -34,6 +34,7 @@ namespace RoundMods
         public List<RoleType> allowedrngRolesBoss = new List<RoleType>();
         public List<ItemType> allowedRngWeapons = new List<ItemType>();
         public List<ItemType> allowedRngMeds = new List<ItemType>();
+        public List<RoleType> noInfectRoles = new List<RoleType>();
 
         public Dictionary<ModType, string> translations = new Dictionary<ModType, string>();
         public Dictionary<string, string> translations2 = new Dictionary<string, string>();
@@ -102,11 +103,13 @@ namespace RoundMods
             allowedrngRoles.Clear();
             allowedrngRolesBoss.Clear();
             allowedRngWeapons.Clear();
+            noInfectRoles.Clear();
 
             allowedRngMeds = data2.GetList("rm_rng.meds", new List<object>() { ItemType.Adrenaline, ItemType.Medkit, ItemType.Painkillers }).ConvertAll((c) => c.GetType() == typeof(ItemType) ? (ItemType)c : (ItemType)int.Parse((string)c));
             allowedRngWeapons = data2.GetList("rm_rng.weapons", new List<object>() { ItemType.GunCOM15, ItemType.GunE11SR, ItemType.GunLogicer, ItemType.GunMP7, ItemType.GunProject90, ItemType.GunUSP, ItemType.MicroHID, ItemType.GrenadeFlash, ItemType.GrenadeFrag }).ConvertAll((c) => c.GetType() == typeof(ItemType) ? (ItemType)c : (ItemType)int.Parse((string)c));
             allowedrngRoles = data2.GetList("rm_rng.samescps", new List<object>() { RoleType.Scp049, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
             allowedrngRolesBoss = data2.GetList("rm_rng.bossscps", new List<object>() { RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
+            noInfectRoles = data2.GetList("rm_rng.noinfect", new List<object>() { RoleType.Scp079 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
 
             maxMods = data2.GetInt("rm_max_mods", Enum.GetValues(typeof(ModType)).Length);
             //maxMods = Config.GetInt("rm_max_mods", Enum.GetValues(typeof(ModType)).Length);

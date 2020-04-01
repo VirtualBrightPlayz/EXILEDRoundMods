@@ -28,6 +28,7 @@ namespace RoundMods
         internal RoleType rngRoleBoss = RoleType.Scp173;
         internal Dictionary<ModType, ModCategory> mods = new Dictionary<ModType, ModCategory>();
         internal GameObject boss;
+        public static List<FragGrenade> deathGrenades = new List<FragGrenade>();
 
         public PluginEvents(RoundMod mod)
         {
@@ -423,6 +424,7 @@ namespace RoundMods
         internal void TeamSpawn(ref TeamRespawnEvent ev)
         {
             respawning = true;
+            Timing.RunCoroutine(ResetSize(ev.ToRespawn));
             Timing.RunCoroutine(SetRespawnStop());
             if (plugin.curMod.HasFlag(ModType.NORESPAWN) && plugin.enabledTypes.Contains(ModType.NORESPAWN))
             {
@@ -435,6 +437,15 @@ namespace RoundMods
             if (plugin.curMod.HasFlag(ModType.ITEMRANDOMIZER) && plugin.enabledTypes.Contains(ModType.ITEMRANDOMIZER))
             {
                 Timing.RunCoroutine(RandomItems());
+            }
+        }
+
+        private IEnumerator<float> ResetSize(List<ReferenceHub> hubs)
+        {
+            yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.1f, 2.5f));
+            foreach (ReferenceHub hub in hubs)
+            {
+                SetPlayerScaleGalaxy119(hub.gameObject, 1f, 1f, 1f);
             }
         }
 
@@ -485,6 +496,7 @@ namespace RoundMods
                         Grenade comp = UnityEngine.Object.Instantiate(set.grenadeInstance).GetComponent<Grenade>();
                         comp.fuseDuration = 0.1f;
                         comp.InitData(gm, Vector3.zero, Vector3.zero, 10f);
+                        //comp.throwerTeam = Team.RIP;
                         //comp.fuseTime = 0f;
                         NetworkServer.Spawn(comp.gameObject);
                     }
@@ -492,7 +504,7 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.CLASSINFECT) && plugin.enabledTypes.Contains(ModType.CLASSINFECT))
             {
-                if (ev.Killer != null && ev.Killer != ev.Player && ev.Killer.characterClassManager.CurClass != RoleType.Scp079)
+                if (ev.Killer != null && ev.Killer != ev.Player && !plugin.noInfectRoles.Contains(ev.Killer.characterClassManager.CurClass))
                 {
                     Timing.RunCoroutine(InfectLate(ev.Player, ev.Killer.characterClassManager.CurClass, ev.Killer.transform.position));
                 }
