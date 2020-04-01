@@ -13,6 +13,10 @@ namespace RoundMods
     {
         public static bool Prefix(NineTailedFoxAnnouncer __instance, Role scp, PlayerStats.HitInfo hit, string groupId)
         {
+            if (RoundMod.instance.curMod.HasFlag(ModType.NONE) && RoundMod.instance.enabledTypes.Contains(ModType.NONE))
+            {
+                return true; // cuz none means none
+            }
             if (RoundMod.instance.curMod.HasFlag(ModType.CLASSINFECT) && RoundMod.instance.enabledTypes.Contains(ModType.CLASSINFECT))
             {
                 if (PlayerManager.players.FindAll((g) =>

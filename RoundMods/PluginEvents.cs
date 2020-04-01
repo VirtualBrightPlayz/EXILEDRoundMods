@@ -47,7 +47,7 @@ namespace RoundMods
             mods.Add(ModType.ITEMRANDOMIZER, ModCategory.NONE);
             mods.Add(ModType.CLASSINFECT, ModCategory.DEATHMODS);
 
-            GetRandom();
+            //GetRandom();
         }
 
         internal void RoundRestart()
@@ -233,7 +233,7 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.SINGLESCPTYPE) && plugin.enabledTypes.Contains(ModType.SINGLESCPTYPE) && !(plugin.curMod.HasFlag(ModType.SCPBOSS) && plugin.enabledTypes.Contains(ModType.SCPBOSS)))
             {
-                if (!roundStarted || respawning)
+                //if (!roundStarted || respawning)
                 {
                     if (ev.Role == RoleType.Scp049 || ev.Role == RoleType.Scp0492 || ev.Role == RoleType.Scp079 || ev.Role == RoleType.Scp096 || ev.Role == RoleType.Scp106 || ev.Role == RoleType.Scp173 || ev.Role == RoleType.Scp93953 || ev.Role == RoleType.Scp93989)
                     {
@@ -251,7 +251,7 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.SCPBOSS) && plugin.enabledTypes.Contains(ModType.SCPBOSS))
             {
-                if (!roundStarted || respawning)
+                //if (!roundStarted || respawning)
                 {
                     if (ev.Player.gameObject.Equals(boss))
                     { }
@@ -424,7 +424,10 @@ namespace RoundMods
         internal void TeamSpawn(ref TeamRespawnEvent ev)
         {
             respawning = true;
-            Timing.RunCoroutine(ResetSize(ev.ToRespawn));
+            foreach (ReferenceHub hub in ev.ToRespawn)
+            {
+                Timing.RunCoroutine(ResetSize(hub));
+            }
             Timing.RunCoroutine(SetRespawnStop());
             if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
             {
@@ -444,13 +447,10 @@ namespace RoundMods
             }
         }
 
-        private IEnumerator<float> ResetSize(List<ReferenceHub> hubs)
+        private IEnumerator<float> ResetSize(ReferenceHub hub)
         {
             yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.1f, 2.5f));
-            foreach (ReferenceHub hub in hubs)
-            {
-                SetPlayerScaleGalaxy119(hub.gameObject, 1f, 1f, 1f);
-            }
+            SetPlayerScaleGalaxy119(hub.gameObject, 1f, 1f, 1f);
         }
 
         internal void PlayerJoin(PlayerJoinEvent ev)
