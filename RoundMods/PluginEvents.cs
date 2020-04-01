@@ -528,6 +528,7 @@ namespace RoundMods
             yield return Timing.WaitForSeconds(0.5f);
             player.playerStats.maxHP = 100;
             player.playerStats.health = 100;
+            SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
             player.characterClassManager.SetClassIDAdv(curClass, true);
             yield return Timing.WaitForSeconds(1.5f);
             player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
