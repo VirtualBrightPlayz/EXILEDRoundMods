@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Plugins\dependencies\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Assembly-CSharp.dll</HintPath>
@@ -40,17 +41,21 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>D:\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\EXILED\EXILED.dll</HintPath>
+    <Reference Include="EXILED, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\EXILED\EXILED.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Events">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Plugins\EXILED_Events.dll</HintPath>
+    <Reference Include="EXILED_Events, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\Plugins\EXILED_Events.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Idler">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Plugins\EXILED_Idler.dll</HintPath>
+    <Reference Include="EXILED_Idler, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\Plugins\EXILED_Idler.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Permissions">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Plugins\EXILED_Permissions.dll</HintPath>
+    <Reference Include="EXILED_Permissions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\Plugins\EXILED_Permissions.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>D:\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror.dll</HintPath>
@@ -68,8 +73,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>D:\SteamLibrary\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\..\..\..\Downloads\EXILED1.9.0\Plugins\dependencies\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet, Version=8.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\mcLC2\Downloads\EXILED1.9.10\Plugins\dependencies\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

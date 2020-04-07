@@ -40,7 +40,7 @@ namespace RoundMods
             mods.Add(ModType.SINGLESCPTYPE, ModCategory.SCPMODS);
             mods.Add(ModType.PLAYERSIZE, ModCategory.PLAYERMODS);
             mods.Add(ModType.SCPBOSS, ModCategory.SCPMODS);
-            mods.Add(ModType.NOWEAPONS, ModCategory.ITEMMODS);
+            mods.Add(ModType.UPSIDEDOWN, ModCategory.PLAYERMODS);
             mods.Add(ModType.NORESPAWN, ModCategory.TEAMMODS);
             mods.Add(ModType.EXPLODEONDEATH, ModCategory.DEATHMODS);
             mods.Add(ModType.FINDWEAPONS, ModCategory.ITEMMODS);
@@ -66,9 +66,6 @@ namespace RoundMods
             if (plugin.curMod.HasFlag(ModType.SCPBOSS) && plugin.enabledTypes.Contains(ModType.SCPBOSS))
             {
             }
-            if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
-            {
-            }
             if (plugin.curMod.HasFlag(ModType.NORESPAWN) && plugin.enabledTypes.Contains(ModType.NORESPAWN))
             {
             }
@@ -89,10 +86,10 @@ namespace RoundMods
             {
                 return; // cuz none means none
             }
-            if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
+            /*if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
             {
                 Timing.RunCoroutine(DeleteWeapons());
-            }
+            }*/
             if (plugin.curMod.HasFlag(ModType.FINDWEAPONS) && plugin.enabledTypes.Contains(ModType.FINDWEAPONS))
             {
                 Timing.RunCoroutine(SpawnFindWeapons());
@@ -107,7 +104,7 @@ namespace RoundMods
         {
             yield return Timing.WaitForSeconds(0.2f);
             List<Room> rooms = new List<Room>();
-            foreach (Room room in Map.GetRooms())
+            foreach (Room room in Map.Rooms)
             {
                 if (UnityEngine.Random.Range(0, 3) == 0)
                     rooms.Add(room);
@@ -122,11 +119,11 @@ namespace RoundMods
 
         private IEnumerator<float> RandomItems()
         {
-            yield return Timing.WaitForSeconds(0.1f);
+            yield return Timing.WaitForSeconds(0.2f);
             ItemType[] items = Enum.GetValues(typeof(ItemType)).ToArray<ItemType>();
             foreach (Pickup item in GameObject.FindObjectsOfType<Pickup>())
             {
-                if (item.ItemId == ItemType.KeycardZoneManager || item.ItemId == ItemType.KeycardScientist || item.ItemId == ItemType.KeycardJanitor)
+                if (plugin.notRandomizeItems.Contains(item.ItemId))
                 {
                 }
                 else
@@ -244,14 +241,15 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
             {
-                if (!roundStarted || respawning)
+                //if (!roundStarted || respawning)
                 {
                     Timing.RunCoroutine(ChangeSizeLate(ev.Player));
                 }
             }
             if (plugin.curMod.HasFlag(ModType.SCPBOSS) && plugin.enabledTypes.Contains(ModType.SCPBOSS))
             {
-                //if (!roundStarted || respawning)
+                // do not comment kek, remember last time?
+                if (!roundStarted /*|| respawning*/)
                 {
                     if (ev.Player.gameObject.Equals(boss))
                     { }
@@ -263,7 +261,7 @@ namespace RoundMods
                             {
                                 boss = ev.Player.gameObject;
                                 ev.Role = rngRoleBoss;
-                                Timing.RunCoroutine(ChangeClassLate(ev.Player, rngRoleBoss, 2.5f, true));
+                                Timing.RunCoroutine(ChangeClassLate(ev.Player, rngRoleBoss, plugin.bossHpMulti, true));
                                 //Timing.RunCoroutine(ChangeSizeLate(ev.Player));
                             }
                             else
@@ -275,7 +273,13 @@ namespace RoundMods
                     }
                 }
             }
-            if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
+
+            if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
+            {
+                Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, client: false));
+            }
+
+            /*if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
             {
                 if (!roundStarted)
                 {
@@ -285,11 +289,59 @@ namespace RoundMods
                         Timing.RunCoroutine(ChangeClassLate(ev.Player, RoleType.ClassD, -1));
                     }
                 }
-            }
+            }*/
             if (plugin.curMod.HasFlag(ModType.FINDWEAPONS) && plugin.enabledTypes.Contains(ModType.FINDWEAPONS))
             {
                 //delete weapons
                 Timing.RunCoroutine(DeletePlayerWeaponsLate(ev.Player));
+            }
+            if (plugin.curMod.HasFlag(ModType.ITEMRANDOMIZER) && plugin.enabledTypes.Contains(ModType.ITEMRANDOMIZER))
+            {
+                //Timing.RunCoroutine(RandomItems(ev.Player));
+            }
+        }
+
+        private IEnumerator<float> ChangeSizeLate(ReferenceHub player, float x, float y, float z, float wait = 10f, bool client = true)
+        {
+            yield return Timing.WaitForSeconds(wait);
+            yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.1f, 2.5f));
+            if (boss != player.gameObject && player.gameObject.transform.localScale != new Vector3(x, y, z))
+            {
+                if (client)
+                {
+                    SetPlayerScaleGalaxy119(player.gameObject, x, y, z);
+                    yield return Timing.WaitForSeconds(1f);
+                    SetPlayerScaleGalaxy119(player.gameObject, x, y, z);
+                }
+                else
+                {
+                    SetPlayerScaleGalaxy119NoClient(player.gameObject, x, y, z);
+                    yield return Timing.WaitForSeconds(1f);
+                    SetPlayerScaleGalaxy119NoClient(player.gameObject, x, y, z);
+                }
+            }
+        }
+
+        private IEnumerator<float> RandomItems(ReferenceHub player)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            ItemType[] items = Enum.GetValues(typeof(ItemType)).ToArray<ItemType>();
+            List<int> remove = new List<int>();
+            int times = player.inventory.items.Count;
+            for (int i = 0; i < times; i++)
+            {
+                var item = player.inventory.items[i];
+                if (plugin.notRandomizeItems.Contains(item.id))
+                {
+                }
+                else
+                {
+                    player.inventory.items.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < times; i++)
+            {
+                player.inventory.AddNewItem(items[UnityEngine.Random.Range(0, items.Length)]);
             }
         }
 
@@ -340,20 +392,31 @@ namespace RoundMods
             }
         }
 
-        private IEnumerator<float> ChangeSizeLate(ReferenceHub player)
+        private IEnumerator<float> ChangeSizeLate(ReferenceHub player, float wait = 10f, bool client = true)
         {
-            yield return Timing.WaitForSeconds(10f);
+            yield return Timing.WaitForSeconds(wait);
             //player.characterClassManager.SetClassID(player.characterClassManager.CurClass);
             float scl = UnityEngine.Random.Range(0.4f, 1.1f);
             //SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
-            player.playerStats.maxHP = (int)(player.playerStats.maxHP * scl);
-            player.playerStats.health = player.playerStats.maxHP;
             yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.1f, 2.5f));
             if (boss != player.gameObject && Vector3.Distance(Vector3.one, player.gameObject.transform.localScale) <= 0.05f)
             {
-                SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
-                yield return Timing.WaitForSeconds(0.5f);
-                SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
+                if (client)
+                {
+                    SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
+                    yield return Timing.WaitForSeconds(1f);
+                    SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
+                    player.playerStats.maxHP = (int)(player.playerStats.maxHP * scl);
+                    player.playerStats.health = player.playerStats.maxHP;
+                }
+                else
+                {
+                    SetPlayerScaleGalaxy119NoClient(player.gameObject, scl, scl, scl);
+                    yield return Timing.WaitForSeconds(1f);
+                    SetPlayerScaleGalaxy119NoClient(player.gameObject, scl, scl, scl);
+                    player.playerStats.maxHP = (int)(player.playerStats.maxHP * scl);
+                    player.playerStats.health = player.playerStats.maxHP;
+                }
             }
         }
 
@@ -427,6 +490,14 @@ namespace RoundMods
             foreach (ReferenceHub hub in ev.ToRespawn)
             {
                 Timing.RunCoroutine(ResetSize(hub));
+                if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(hub, 2.5f));
+                }
+                if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(hub, -1f, -1f, -1f, 2.5f, false));
+                }
             }
             Timing.RunCoroutine(SetRespawnStop());
             if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
@@ -471,7 +542,7 @@ namespace RoundMods
                 foreach (ModType item in Enum.GetValues(typeof(ModType)))
                 {
                     if (plugin.curMod.HasFlag(item))
-                        player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[item], 1, false);
+                        player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[item], 2, false);
                 }
                 //player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.curMod.ToString(), 5, false);
             }
@@ -485,7 +556,34 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
             {
-                Timing.RunCoroutine(ChangeSizeLate(ev.Player));
+                Timing.RunCoroutine(ChangeSizeLate(ev.Player, 1f));
+            }
+            if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
+            {
+                Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, 1f, false));
+            }
+        }
+
+        internal void PlayerHurt(ref PlayerHurtEvent ev)
+        {
+            if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+            {
+                return; // cuz none means none
+            }
+            if (ev.Player.playerStats.health - ev.Amount <= 0f)
+            {
+                // is (probably) dead
+                if (plugin.curMod.HasFlag(ModType.CLASSINFECT) && plugin.enabledTypes.Contains(ModType.CLASSINFECT))
+                {
+                    if (ev.Attacker != null && ev.Attacker != ev.Player && !plugin.noInfectRoles.Contains(ev.Attacker.characterClassManager.CurClass))
+                    {
+                        PlayerStats.HitInfo i = ev.Info;
+                        i.Amount = 0f;
+                        ev.Info = i;
+                        ev.Amount = 0f;
+                        Timing.RunCoroutine(InfectLate(ev.Player, ev.Attacker.characterClassManager.CurClass, ev.Attacker.transform.position));
+                    }
+                }
             }
         }
 
@@ -525,17 +623,18 @@ namespace RoundMods
 
         private IEnumerator<float> InfectLate(ReferenceHub player, RoleType curClass, Vector3 position)
         {
-            yield return Timing.WaitForSeconds(0.5f);
+            yield return Timing.WaitForSeconds(1f);
             player.playerStats.maxHP = 100;
             player.playerStats.health = 100;
             SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
-            player.characterClassManager.SetClassIDAdv(curClass, true);
-            yield return Timing.WaitForSeconds(1.5f);
+            player.characterClassManager.SetClassIDAdv(curClass, false);
+            yield return Timing.WaitForSeconds(2f);
             player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
-            player.plyMovementSync.OverridePosition(position, 0f, true);
+            //player.plyMovementSync.OverridePosition(position, 0f, true);
             yield return Timing.WaitForSeconds(0.5f);
             player.playerStats.maxHP = 100;
             player.playerStats.health = 100;
+            player.playerStats.NetworksyncArtificialHealth = 0x0;
         }
 
         internal void PDDie(PocketDimDeathEvent ev)

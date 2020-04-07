@@ -35,6 +35,9 @@ namespace RoundMods
         public List<ItemType> allowedRngWeapons = new List<ItemType>();
         public List<ItemType> allowedRngMeds = new List<ItemType>();
         public List<RoleType> noInfectRoles = new List<RoleType>();
+        public List<ItemType> notRandomizeItems = new List<ItemType>();
+
+        public float bossHpMulti = 2f;
 
         public Dictionary<ModType, string> translations = new Dictionary<ModType, string>();
         public Dictionary<string, string> translations2 = new Dictionary<string, string>();
@@ -55,6 +58,7 @@ namespace RoundMods
             Events.PlayerDeathEvent -= PLEV.PlayerDeath;
             Events.PocketDimDeathEvent -= PLEV.PDDie;
             Events.RemoteAdminCommandEvent -= PLEV.RACmd;
+            Events.PlayerHurtEvent -= PLEV.PlayerHurt;
             PLEV = null;
             instance = null;
         }
@@ -79,6 +83,7 @@ namespace RoundMods
             Events.PlayerDeathEvent += PLEV.PlayerDeath;
             Events.PocketDimDeathEvent += PLEV.PDDie;
             Events.RemoteAdminCommandEvent += PLEV.RACmd;
+            Events.PlayerHurtEvent += PLEV.PlayerHurt;
             instance = this;
             HarmonyInstance instance2 = HarmonyInstance.Create("net.virtualbrightplayz.roundmod");
             instance2.PatchAll();
@@ -110,7 +115,9 @@ namespace RoundMods
             allowedrngRoles = data2.GetList("rm_rng.samescps", new List<object>() { RoleType.Scp049, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
             allowedrngRolesBoss = data2.GetList("rm_rng.bossscps", new List<object>() { RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
             noInfectRoles = data2.GetList("rm_rng.noinfect", new List<object>() { RoleType.Scp079 }).ConvertAll((c) => c.GetType() == typeof(RoleType) ? (RoleType)c : (RoleType)int.Parse((string)c));
+            notRandomizeItems = data2.GetList("rm_rng.notrandomized", new List<object>() { ItemType.KeycardScientist, ItemType.KeycardZoneManager, ItemType.KeycardJanitor }).ConvertAll((c) => c.GetType() == typeof(ItemType) ? (ItemType)c : (ItemType)int.Parse((string)c));
 
+            bossHpMulti = data2.GetFloat("rm_boss_hp_multiply", 2f);
             maxMods = data2.GetInt("rm_max_mods", Enum.GetValues(typeof(ModType)).Length);
             //maxMods = Config.GetInt("rm_max_mods", Enum.GetValues(typeof(ModType)).Length);
             foreach (ModType item in Enum.GetValues(typeof(ModType)))

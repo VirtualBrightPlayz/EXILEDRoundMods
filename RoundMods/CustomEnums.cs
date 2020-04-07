@@ -14,7 +14,7 @@ namespace RoundMods
         SINGLESCPTYPE = 2,
         PLAYERSIZE = 4,
         SCPBOSS = 8,
-        NOWEAPONS = 16,
+        UPSIDEDOWN = 16,
         NORESPAWN = 64,
         EXPLODEONDEATH = 128,
         FINDWEAPONS = 256,
