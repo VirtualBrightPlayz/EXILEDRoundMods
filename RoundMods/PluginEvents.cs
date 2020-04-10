@@ -48,6 +48,36 @@ namespace RoundMods
             mods.Add(ModType.CLASSINFECT, ModCategory.DEATHMODS);
 
             //GetRandom();
+            try
+            {
+                ServerConsole.singleton.NameFormatter.Commands.Add("rm_current_mods", (e) =>
+                {
+                    if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+                    {
+                        return plugin.translations[ModType.NONE];
+                    }
+                    else
+                    {
+                        string str = string.Empty;
+                        int j = 0;
+                        for (int i = 0; i < Enum.GetValues(typeof(ModType)).Length; i++)
+                        {
+                            ModType item = Enum.GetValues(typeof(ModType)).ToArray<ModType>()[i];
+                            if (plugin.curMod.HasFlag(item))
+                            {
+                                j++;
+                                if (j == 1)
+                                    str += plugin.translations[item];
+                                else
+                                    str += ", " + plugin.translations[item];
+                            }
+                        }
+                        return str;
+                    }
+                });
+            }
+            catch (Exception e)
+            { }
         }
 
         internal void RoundRestart()
@@ -189,36 +219,6 @@ namespace RoundMods
         {
             roundStarted = false;
             GetRandom();
-            try
-            {
-                ServerConsole.singleton.NameFormatter.Commands.Add("rm_current_mods", (e) =>
-                {
-                    if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
-                    {
-                        return plugin.translations[ModType.NONE];
-                    }
-                    else
-                    {
-                        string str = string.Empty;
-                        int j = 0;
-                        for (int i = 0; i < Enum.GetValues(typeof(ModType)).Length; i++)
-                        {
-                            ModType item = Enum.GetValues(typeof(ModType)).ToArray<ModType>()[i];
-                            if (plugin.curMod.HasFlag(item))
-                            {
-                                j++;
-                                if (j == 1)
-                                    str += plugin.translations[item];
-                                else
-                                    str += ", " + plugin.translations[item];
-                            }
-                        }
-                        return str;
-                    }
-                });
-            }
-            catch (Exception e)
-            { }
         }
 
         internal void PlayerSpawn(PlayerSpawnEvent ev)
@@ -230,7 +230,8 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.SINGLESCPTYPE) && plugin.enabledTypes.Contains(ModType.SINGLESCPTYPE) && !(plugin.curMod.HasFlag(ModType.SCPBOSS) && plugin.enabledTypes.Contains(ModType.SCPBOSS)))
             {
-                //if (!roundStarted || respawning)
+                // do not comment kek, remember last time?
+                if (!roundStarted)
                 {
                     if (ev.Role == RoleType.Scp049 || ev.Role == RoleType.Scp0492 || ev.Role == RoleType.Scp079 || ev.Role == RoleType.Scp096 || ev.Role == RoleType.Scp106 || ev.Role == RoleType.Scp173 || ev.Role == RoleType.Scp93953 || ev.Role == RoleType.Scp93989)
                     {
@@ -241,7 +242,7 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
             {
-                //if (!roundStarted || respawning)
+                if (!roundStarted || respawning)
                 {
                     Timing.RunCoroutine(ChangeSizeLate(ev.Player));
                 }
@@ -276,7 +277,15 @@ namespace RoundMods
 
             if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
             {
-                Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, client: false));
+                if (ev.Role == RoleType.Scp106)
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, client: false));
+
+                }
+                else
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(ev.Player, 1f, -1f, 1f, client: false));
+                }
             }
 
             /*if (plugin.curMod.HasFlag(ModType.NOWEAPONS) && plugin.enabledTypes.Contains(ModType.NOWEAPONS))
@@ -383,7 +392,21 @@ namespace RoundMods
                     player.playerStats.health = hp;
                 }
                 SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
-                SetPlayerScaleGalaxy119NoClient(player.gameObject, 2f, 2f, 2f);
+                if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
+                {
+                    if (@class == RoleType.Scp106)
+                    {
+                        SetPlayerScaleGalaxy119NoClient(player.gameObject, -2f, -2f, -2f);
+                    }
+                    else
+                    {
+                        SetPlayerScaleGalaxy119NoClient(player.gameObject, 2f, -2f, 2f);
+                    }
+                }
+                else
+                {
+                    SetPlayerScaleGalaxy119NoClient(player.gameObject, 2f, 2f, 2f);
+                }
             }
             else
             {
@@ -496,7 +519,15 @@ namespace RoundMods
                 }
                 if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
                 {
-                    Timing.RunCoroutine(ChangeSizeLate(hub, -1f, -1f, -1f, 2.5f, false));
+
+                    if (hub.GetRole() == RoleType.Scp106)
+                    {
+                        Timing.RunCoroutine(ChangeSizeLate(hub, -1f, -1f, -1f, 2.5f, client: false));
+                    }
+                    else
+                    {
+                        Timing.RunCoroutine(ChangeSizeLate(hub, 1f, -1f, 1f, 2.5f, client: false));
+                    }
                 }
             }
             Timing.RunCoroutine(SetRespawnStop());
@@ -560,7 +591,14 @@ namespace RoundMods
             }
             if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
             {
-                Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, 1f, false));
+                if (ev.Player.GetRole() == RoleType.Scp106)
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(ev.Player, -1f, -1f, -1f, 1f, client: false));
+                }
+                else
+                {
+                    Timing.RunCoroutine(ChangeSizeLate(ev.Player, 1f, -1f, 1f, 1f, client: false));
+                }
             }
         }
 
@@ -629,11 +667,13 @@ namespace RoundMods
             SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
             player.characterClassManager.SetClassIDAdv(curClass, false);
             yield return Timing.WaitForSeconds(2f);
-            player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
-            //player.plyMovementSync.OverridePosition(position, 0f, true);
+            //player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
+            player.plyMovementSync.OverridePosition(position, 0f, true);
             yield return Timing.WaitForSeconds(0.5f);
             player.playerStats.maxHP = 100;
             player.playerStats.health = 100;
+            player.plyMovementSync.OverridePosition(position, 0f, true);
+            //player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
             player.playerStats.NetworksyncArtificialHealth = 0x0;
         }
 
