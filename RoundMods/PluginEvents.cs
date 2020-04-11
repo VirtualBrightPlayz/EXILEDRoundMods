@@ -513,6 +513,10 @@ namespace RoundMods
             foreach (ReferenceHub hub in ev.ToRespawn)
             {
                 Timing.RunCoroutine(ResetSize(hub));
+                if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
+                {
+                    return; // cuz none means none
+                }
                 if (plugin.curMod.HasFlag(ModType.PLAYERSIZE) && plugin.enabledTypes.Contains(ModType.PLAYERSIZE))
                 {
                     Timing.RunCoroutine(ChangeSizeLate(hub, 2.5f));
