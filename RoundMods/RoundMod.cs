@@ -65,6 +65,10 @@ namespace RoundMods
 
         public override void OnEnable()
         {
+            if (Config.GetBool("rm_disable", true))
+            {
+                return;
+            }
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             pluginDir = Path.Combine(appData, "Plugins", "RoundMod");
             if (!Directory.Exists(pluginDir))
