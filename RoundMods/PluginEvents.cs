@@ -149,8 +149,9 @@ namespace RoundMods
 
         private IEnumerator<float> RandomItems()
         {
-            yield return Timing.WaitForSeconds(0.2f);
+            yield return Timing.WaitForSeconds(1.2f);
             ItemType[] items = Enum.GetValues(typeof(ItemType)).ToArray<ItemType>();
+            List<Pickup> oldItems = new List<Pickup>();
             foreach (Pickup item in GameObject.FindObjectsOfType<Pickup>())
             {
                 if (plugin.notRandomizeItems.Contains(item.ItemId))
@@ -159,9 +160,14 @@ namespace RoundMods
                 else
                 {
                     Map.SpawnItem(items[UnityEngine.Random.Range(0, items.Length)], 0f, item.transform.position + Vector3.up * 0.1f).RefreshDurability(true, true);
-                    item.Delete();
+                    oldItems.Add(item);
+                    //item.Delete();
                     //item.SetIDFull(items[UnityEngine.Random.Range(0, items.Length)]);
                 }
+            }
+            foreach (var item in oldItems)
+            {
+                item.Delete();
             }
         }
 
@@ -313,7 +319,7 @@ namespace RoundMods
         private IEnumerator<float> ChangeSizeLate(ReferenceHub player, float x, float y, float z, float wait = 10f, bool client = true)
         {
             yield return Timing.WaitForSeconds(wait);
-            yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.1f, 2.5f));
+            yield return Timing.WaitForSeconds(UnityEngine.Random.Range(0.3f, 2.5f));
             if (boss != player.gameObject && player.gameObject.transform.localScale != new Vector3(x, y, z))
             {
                 if (client)
