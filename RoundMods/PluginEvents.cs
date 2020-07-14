@@ -390,12 +390,12 @@ namespace RoundMods
                 if (multiply)
                 {
                     player.playerStats.maxHP = (int)(hp * player.playerStats.maxHP);
-                    player.playerStats.health = (player.playerStats.maxHP);
+                    player.playerStats.Health = (player.playerStats.maxHP);
                 }
                 else
                 {
                     player.playerStats.maxHP = (int)hp;
-                    player.playerStats.health = hp;
+                    player.playerStats.Health = hp;
                 }
                 SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
                 if (plugin.curMod.HasFlag(ModType.UPSIDEDOWN) && plugin.enabledTypes.Contains(ModType.UPSIDEDOWN))
@@ -417,7 +417,7 @@ namespace RoundMods
             else
             {
                 yield return Timing.WaitForSeconds(7f);
-                player.playerStats.health = player.playerStats.maxHP;
+                player.playerStats.Health = player.playerStats.maxHP;
             }
         }
 
@@ -436,7 +436,7 @@ namespace RoundMods
                     yield return Timing.WaitForSeconds(1f);
                     SetPlayerScaleGalaxy119(player.gameObject, scl, scl, scl);
                     player.playerStats.maxHP = (int)(player.playerStats.maxHP * scl);
-                    player.playerStats.health = player.playerStats.maxHP;
+                    player.playerStats.Health = player.playerStats.maxHP;
                 }
                 else
                 {
@@ -444,7 +444,7 @@ namespace RoundMods
                     yield return Timing.WaitForSeconds(1f);
                     SetPlayerScaleGalaxy119NoClient(player.gameObject, scl, scl, scl);
                     player.playerStats.maxHP = (int)(player.playerStats.maxHP * scl);
-                    player.playerStats.health = player.playerStats.maxHP;
+                    player.playerStats.Health = player.playerStats.maxHP;
                 }
             }
         }
@@ -573,17 +573,17 @@ namespace RoundMods
         private IEnumerator<float> BroadcastCurrentMods(ReferenceHub player)
         {
             yield return Timing.WaitForSeconds(0.1f);
-            player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, "Current Round Modifier(s):", 5, false);
+            player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, "Current Round Modifier(s):", 5, Broadcast.BroadcastFlags.Normal);
             if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
             {
-                player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[ModType.NONE], 5, false);
+                player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[ModType.NONE], 5, Broadcast.BroadcastFlags.Normal);
             }
             else
             {
                 foreach (ModType item in Enum.GetValues(typeof(ModType)))
                 {
                     if (plugin.curMod.HasFlag(item))
-                        player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[item], 2, false);
+                        player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.translations[item], 2, Broadcast.BroadcastFlags.Normal);
                 }
                 //player.GetComponent<Broadcast>().TargetAddElement(player.characterClassManager.connectionToClient, plugin.curMod.ToString(), 5, false);
             }
@@ -618,7 +618,7 @@ namespace RoundMods
             {
                 return; // cuz none means none
             }
-            if (ev.Player.playerStats.health - ev.Amount <= 0f)
+            if (ev.Player.playerStats.Health - ev.Amount <= 0f)
             {
                 // is (probably) dead
                 if (plugin.curMod.HasFlag(ModType.CLASSINFECT) && plugin.enabledTypes.Contains(ModType.CLASSINFECT))
@@ -673,16 +673,16 @@ namespace RoundMods
         {
             yield return Timing.WaitForSeconds(1f);
             player.playerStats.maxHP = 100;
-            player.playerStats.health = 100;
+            player.playerStats.Health = 100;
             SetPlayerScaleGalaxy119(player.gameObject, 1f, 1f, 1f);
             player.characterClassManager.SetClassIDAdv(curClass, false);
             yield return Timing.WaitForSeconds(2f);
             //player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
-            player.plyMovementSync.OverridePosition(position, 0f, true);
+            player.playerMovementSync.OverridePosition(position, 0f, true);
             yield return Timing.WaitForSeconds(0.5f);
             player.playerStats.maxHP = 100;
-            player.playerStats.health = 100;
-            player.plyMovementSync.OverridePosition(position, 0f, true);
+            player.playerStats.Health = 100;
+            player.playerMovementSync.OverridePosition(position, 0f, true);
             //player.plyMovementSync.TargetForcePosition(player.characterClassManager.connectionToClient, position);
             player.playerStats.NetworksyncArtificialHealth = 0x0;
         }
