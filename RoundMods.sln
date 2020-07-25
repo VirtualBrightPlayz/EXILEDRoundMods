@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoundMods", "RoundMods\RoundMods.csproj", "{FD83A136-2D29-4B57-A3E3-1D9FA96051F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCPBoss", "SCPBoss\SCPBoss.csproj", "{1742D4B6-7B92-46A2-B4B6-32E6EF54A335}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassInfection", "ClassInfection\ClassInfection.csproj", "{770AA6E2-E142-40E2-9D71-04D2D9F21F09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{FD83A136-2D29-4B57-A3E3-1D9FA96051F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD83A136-2D29-4B57-A3E3-1D9FA96051F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD83A136-2D29-4B57-A3E3-1D9FA96051F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1742D4B6-7B92-46A2-B4B6-32E6EF54A335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1742D4B6-7B92-46A2-B4B6-32E6EF54A335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1742D4B6-7B92-46A2-B4B6-32E6EF54A335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1742D4B6-7B92-46A2-B4B6-32E6EF54A335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{770AA6E2-E142-40E2-9D71-04D2D9F21F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{770AA6E2-E142-40E2-9D71-04D2D9F21F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{770AA6E2-E142-40E2-9D71-04D2D9F21F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{770AA6E2-E142-40E2-9D71-04D2D9F21F09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
