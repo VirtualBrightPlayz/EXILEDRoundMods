@@ -1,6 +1,4 @@
-﻿using EXILED;
-using Grenades;
-using Harmony;
+﻿using Grenades;
 using System;
 using System.Collections.Generic;
 using System.Linq;

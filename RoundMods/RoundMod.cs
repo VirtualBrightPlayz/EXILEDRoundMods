@@ -4,29 +4,31 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using EXILED;
-using EXILED.ApiObjects;
-using EXILED.Extensions;
 using Grenades;
 using MEC;
 using Mirror;
 using UnityEngine;
-using Harmony;
+using HarmonyLib;
 using System.IO;
 using YamlDotNet.Serialization;
+using Exiled.API.Features;
 
 namespace RoundMods
 {
-    public class RoundMod : Plugin
+    public class RoundMod : Plugin<RMConfig>
     {
-        public override string getName => "RoundMods";
+        public override string Name => "RoundMods";
+        public override string Author => "VirtualBrightPlayz";
+        public override System.Version Version => new System.Version(1, 4, 0);
 
         internal PluginEvents PLEV;
         public static RoundMod instance = null;
 
         public ModType curMod = ModType.NONE;
 
-        public List<ModType> allowedTypes = new List<ModType>();
+        public List<ModType> enabledTypes = new List<ModType>();
+
+        /*public List<ModType> allowedTypes = new List<ModType>();
         public List<ModType> enabledTypes = new List<ModType>(); // enabled but not used
 
 
@@ -44,61 +46,74 @@ namespace RoundMods
 
 
         public int maxMods;
-        public static string pluginDir;
+        public static string pluginDir;*/
 
-        public override void OnDisable()
+        public List<ModType> GetAllowedMods()
         {
-            Events.RoundStartEvent -= PLEV.RoundStart;
-            Events.RoundRestartEvent -= PLEV.RoundRestart;
-            Events.WaitingForPlayersEvent -= PLEV.WaitForPlayers;
-            Events.PlayerSpawnEvent -= PLEV.PlayerSpawn;
-            Events.TeamRespawnEvent -= PLEV.TeamSpawn;
-            Events.PlayerJoinEvent -= PLEV.PlayerJoin;
-            Events.CheckEscapeEvent -= PLEV.PlayerEscape;
-            Events.PlayerDeathEvent -= PLEV.PlayerDeath;
-            Events.PocketDimDeathEvent -= PLEV.PDDie;
-            Events.RemoteAdminCommandEvent -= PLEV.RACmd;
-            Events.PlayerHurtEvent -= PLEV.PlayerHurt;
+            List<ModType> list = new List<ModType>();
+            foreach (var item in Config.mods)
+            {
+                if (item.allow && !list.Contains(item.mod))
+                    list.Add(item.mod);
+            }
+            return list;
+        }
+
+        public List<RoleType> AllowedRngRolesSameSCP()
+        {
+            List<RoleType> list = new List<RoleType>();
+            foreach (var item in Config.samescps)
+            {
+                list.Add((RoleType)item);
+            }
+            return list;
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            Exiled.Events.Handlers.Server.RoundStarted -= PLEV.RoundStart;
+            Exiled.Events.Handlers.Server.RestartingRound -= PLEV.RoundRestart;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= PLEV.WaitForPlayers;
+            Exiled.Events.Handlers.Player.Spawning -= PLEV.PlayerSpawn;
+            Exiled.Events.Handlers.Server.RespawningTeam -= PLEV.TeamSpawn;
+            Exiled.Events.Handlers.Player.Joined -= PLEV.PlayerJoin;
+            Exiled.Events.Handlers.Player.Escaping -= PLEV.PlayerEscape;
+            Exiled.Events.Handlers.Player.Died -= PLEV.PlayerDeath;
+            Exiled.Events.Handlers.Player.FailingEscapePocketDimension -= PLEV.PDDie;
+            //Events.RemoteAdminCommandEvent -= PLEV.RACmd;
+            Exiled.Events.Handlers.Player.Hurting -= PLEV.PlayerHurt;
             PLEV = null;
             instance = null;
         }
 
-        public override void OnEnable()
+        public override void OnEnabled()
         {
-            if (Config.GetBool("rm_disable", true))
-            {
-                return;
-            }
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            pluginDir = Path.Combine(appData, "Plugins", "RoundMod");
+            base.OnEnabled();
+            /*pluginDir = Path.Combine(Paths.Configs, "RoundMod");
             if (!Directory.Exists(pluginDir))
                 Directory.CreateDirectory(pluginDir);
             if (!File.Exists(Path.Combine(pluginDir, "config-" + typeof(ServerStatic).GetField("ServerPort", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null).ToString() + ".yml")))
                 File.WriteAllText(Path.Combine(pluginDir, "config-" + typeof(ServerStatic).GetField("ServerPort", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null).ToString() + ".yml"), "");
-            ConfigLoad();
+            ConfigLoad();*/
             PLEV = new PluginEvents(this);
-            Events.RoundStartEvent += PLEV.RoundStart;
-            Events.RoundRestartEvent += PLEV.RoundRestart;
-            Events.WaitingForPlayersEvent += PLEV.WaitForPlayers;
-            Events.PlayerSpawnEvent += PLEV.PlayerSpawn;
-            Events.TeamRespawnEvent += PLEV.TeamSpawn;
-            Events.PlayerJoinEvent += PLEV.PlayerJoin;
-            Events.CheckEscapeEvent += PLEV.PlayerEscape;
-            Events.PlayerDeathEvent += PLEV.PlayerDeath;
-            Events.PocketDimDeathEvent += PLEV.PDDie;
-            Events.RemoteAdminCommandEvent += PLEV.RACmd;
-            Events.PlayerHurtEvent += PLEV.PlayerHurt;
+            Exiled.Events.Handlers.Server.RoundStarted += PLEV.RoundStart;
+            Exiled.Events.Handlers.Server.RestartingRound += PLEV.RoundRestart;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += PLEV.WaitForPlayers;
+            Exiled.Events.Handlers.Player.Spawning += PLEV.PlayerSpawn;
+            Exiled.Events.Handlers.Server.RespawningTeam += PLEV.TeamSpawn;
+            Exiled.Events.Handlers.Player.Joined += PLEV.PlayerJoin;
+            Exiled.Events.Handlers.Player.Escaping += PLEV.PlayerEscape;
+            Exiled.Events.Handlers.Player.Died += PLEV.PlayerDeath;
+            Exiled.Events.Handlers.Player.FailingEscapePocketDimension += PLEV.PDDie;
+            //Events.RemoteAdminCommandEvent += PLEV.RACmd;
+            Exiled.Events.Handlers.Player.Hurting += PLEV.PlayerHurt;
             instance = this;
-            HarmonyInstance instance2 = HarmonyInstance.Create("net.virtualbrightplayz.roundmod");
-            instance2.PatchAll();
+            //Harmony instance2 = new Harmony("net.virtualbrightplayz.roundmod");
+            //instance2.PatchAll();
         }
 
-        public override void OnReload()
-        {
-            //ConfigLoad();
-        }
-
-        public void ConfigLoad()
+        /*public void ConfigLoad()
         {
             string data = File.ReadAllText(Path.Combine(pluginDir, "config-" + typeof(ServerStatic).GetField("ServerPort", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null).ToString() + ".yml"));
             var des = new DeserializerBuilder().Build();
@@ -148,31 +163,6 @@ namespace RoundMods
                 allowedTypes.Add(ModType.NONE);
                 enabledTypes.Add(ModType.NONE);
             }
-
-            /*allowedrngRoles.Add(RoleType.Scp049);
-            allowedrngRoles.Add(RoleType.Scp096);
-            allowedrngRoles.Add(RoleType.Scp106);
-            allowedrngRoles.Add(RoleType.Scp173);
-            allowedrngRoles.Add(RoleType.Scp93953);
-            allowedrngRoles.Add(RoleType.Scp93989);
-
-            allowedrngRolesBoss.Add(RoleType.Scp049);
-            allowedrngRolesBoss.Add(RoleType.Scp173);
-            allowedrngRolesBoss.Add(RoleType.Scp096);
-            allowedrngRolesBoss.Add(RoleType.Scp106);
-            allowedrngRolesBoss.Add(RoleType.Scp93953);
-            allowedrngRolesBoss.Add(RoleType.Scp93989);
-
-            allowedRngWeapons.Add(ItemType.GunCOM15);
-            allowedRngWeapons.Add(ItemType.GunE11SR);
-            allowedRngWeapons.Add(ItemType.GunLogicer);
-            allowedRngWeapons.Add(ItemType.GunMP7);
-            allowedRngWeapons.Add(ItemType.GunProject90);
-            allowedRngWeapons.Add(ItemType.GunUSP);
-
-            allowedRngMeds.Add(ItemType.Medkit);
-            allowedRngMeds.Add(ItemType.Adrenaline);
-            allowedRngMeds.Add(ItemType.Painkillers);*/
-        }
+        }*/
     }
 }

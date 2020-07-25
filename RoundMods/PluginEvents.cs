@@ -4,16 +4,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using EXILED;
-using EXILED.ApiObjects;
-using EXILED.Extensions;
 using Grenades;
 using MEC;
 using Mirror;
 using UnityEngine;
-using Harmony;
 using System.IO;
 using YamlDotNet.Serialization;
+using Exiled.Events.EventArgs;
 
 namespace RoundMods
 {
@@ -227,7 +224,7 @@ namespace RoundMods
             GetRandom();
         }
 
-        internal void PlayerSpawn(PlayerSpawnEvent ev)
+        internal void PlayerSpawn(SpawningEventArgs ev)
         {
             //Log.Debug("roundStarted " + roundStarted);
             if (plugin.curMod.HasFlag(ModType.NONE) && plugin.enabledTypes.Contains(ModType.NONE))
@@ -239,9 +236,9 @@ namespace RoundMods
                 // do not comment kek, remember last time?
                 if (!roundStarted)
                 {
-                    if (ev.Role == RoleType.Scp049 || ev.Role == RoleType.Scp0492 || ev.Role == RoleType.Scp079 || ev.Role == RoleType.Scp096 || ev.Role == RoleType.Scp106 || ev.Role == RoleType.Scp173 || ev.Role == RoleType.Scp93953 || ev.Role == RoleType.Scp93989)
+                    if (ev.RoleType == RoleType.Scp049 || ev.RoleType == RoleType.Scp0492 || ev.RoleType == RoleType.Scp079 || ev.RoleType == RoleType.Scp096 || ev.RoleType == RoleType.Scp106 || ev.RoleType == RoleType.Scp173 || ev.RoleType == RoleType.Scp93953 || ev.RoleType == RoleType.Scp93989)
                     {
-                        ev.Role = rngRole;
+                        ev.RoleType = rngRole;
                         Timing.RunCoroutine(ChangeClassLate(ev.Player, rngRole, -1));
                     }
                 }
@@ -262,7 +259,7 @@ namespace RoundMods
                     { }
                     else
                     {
-                        if (ev.Role == RoleType.Scp049 || ev.Role == RoleType.Scp0492 || ev.Role == RoleType.Scp079 || ev.Role == RoleType.Scp096 || ev.Role == RoleType.Scp106 || ev.Role == RoleType.Scp173 || ev.Role == RoleType.Scp93953 || ev.Role == RoleType.Scp93989)
+                        if (ev.RoleType == RoleType.Scp049 || ev.RoleType == RoleType.Scp0492 || ev.RoleType == RoleType.Scp079 || ev.RoleType == RoleType.Scp096 || ev.RoleType == RoleType.Scp106 || ev.RoleType == RoleType.Scp173 || ev.RoleType == RoleType.Scp93953 || ev.RoleType == RoleType.Scp93989)
                         {
                             if (boss == null)
                             {
